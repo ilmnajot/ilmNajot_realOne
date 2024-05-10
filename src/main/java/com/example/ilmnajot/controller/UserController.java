@@ -1,0 +1,57 @@
+package com.example.ilmnajot.controller;
+
+import com.example.ilmnajot.model.ApiResponse;
+import com.example.ilmnajot.model.request.UserRequest;
+import com.example.ilmnajot.service.UserService;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+    @PostMapping("/addUser")
+    public HttpEntity<ApiResponse> addUser(@RequestBody UserRequest request){
+        ApiResponse apiResponse = userService.addUser(request);
+        return apiResponse!=null
+                ? ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse)
+                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+    @GetMapping("/getUser/{userId}")
+    public HttpEntity<ApiResponse> getUser(@PathVariable Long userId){
+        ApiResponse apiResponse = userService.getUserById(userId);
+        return apiResponse!=null
+                ? ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse)
+                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+    @GetMapping("/getUsers")
+    public HttpEntity<ApiResponse> getUsers(){
+        ApiResponse apiResponse = userService.getUsers();
+        return apiResponse!=null
+                ? ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse)
+                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+    @PutMapping("/updateUser/{userId}")
+    public HttpEntity<ApiResponse> updateUser(
+            @PathVariable Long userId,
+            @RequestBody UserRequest request){
+        ApiResponse apiResponse = userService.updateUser(userId, request);
+        return apiResponse!=null
+                ? ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse)
+                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+    @DeleteMapping("/deleteUser/{userId}")
+    public HttpEntity<ApiResponse> deleteUser(@PathVariable Long userId){
+        ApiResponse apiResponse = userService.deleteUser(userId);
+        return apiResponse!=null
+                ? ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse)
+                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
