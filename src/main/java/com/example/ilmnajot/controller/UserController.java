@@ -1,6 +1,6 @@
 package com.example.ilmnajot.controller;
 
-import com.example.ilmnajot.model.ApiResponse;
+import com.example.ilmnajot.model.common.ApiResponse;
 import com.example.ilmnajot.model.request.UserRequest;
 import com.example.ilmnajot.service.UserService;
 import org.springframework.http.HttpEntity;
@@ -53,5 +53,20 @@ public class UserController {
         return apiResponse!=null
                 ? ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse)
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @GetMapping("/getUserByName")
+    public HttpEntity<ApiResponse> getUserByName(@RequestParam(name = "name") String name){
+        ApiResponse apiResponse = userService.getUserByName(name);
+        return apiResponse!=null
+                ? ResponseEntity.status(HttpStatus.FOUND).body(apiResponse)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    @GetMapping("/getUserByEmail")
+    public HttpEntity<ApiResponse> getUserByEmail(@RequestParam(name = "email") String email){
+        ApiResponse apiResponse = userService.getUserByEmail(email);
+        return apiResponse!=null
+                ? ResponseEntity.status(HttpStatus.FOUND).body(apiResponse)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

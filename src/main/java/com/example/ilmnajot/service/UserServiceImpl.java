@@ -2,7 +2,7 @@ package com.example.ilmnajot.service;
 
 import com.example.ilmnajot.entity.User;
 import com.example.ilmnajot.exception.UserException;
-import com.example.ilmnajot.model.ApiResponse;
+import com.example.ilmnajot.model.common.ApiResponse;
 import com.example.ilmnajot.model.request.UserRequest;
 import com.example.ilmnajot.model.response.UserResponse;
 import com.example.ilmnajot.repository.UserRepository;

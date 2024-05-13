@@ -1,6 +1,6 @@
 package com.example.ilmnajot.service;
 
-import com.example.ilmnajot.model.ApiResponse;
+import com.example.ilmnajot.model.common.ApiResponse;
 import com.example.ilmnajot.model.request.UserRequest;
 
 public interface UserService {
