@@ -19,18 +19,18 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/signUp")
-    public HttpEntity<ApiResponse> register(@RequestBody UserRequest form){
+    @PostMapping("/register")
+    public HttpEntity<ApiResponse> register(@RequestBody UserRequest form) {
         ApiResponse apiResponse = authService.register(form);
-        return apiResponse !=null
+        return apiResponse != null
                 ? ResponseEntity.ok(apiResponse)
                 : ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
-    @PostMapping("/singIn")
-    public HttpEntity<ApiResponse> singIn(@RequestBody LoginForm form){
+    @PostMapping("/login")
+    public HttpEntity<ApiResponse> login(@RequestBody LoginForm form) {
         ApiResponse apiResponse = authService.login(form);
-        return apiResponse !=null
+        return apiResponse != null
                 ? ResponseEntity.ok(apiResponse)
                 : ResponseEntity.status(HttpStatus.CONFLICT).build();
     }

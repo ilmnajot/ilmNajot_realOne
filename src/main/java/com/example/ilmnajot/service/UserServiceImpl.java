@@ -1,11 +1,13 @@
 package com.example.ilmnajot.service;
 
 import com.example.ilmnajot.entity.User;
+import com.example.ilmnajot.enums.RoleName;
 import com.example.ilmnajot.exception.UserException;
 import com.example.ilmnajot.model.common.ApiResponse;
 import com.example.ilmnajot.model.request.UserRequest;
 import com.example.ilmnajot.model.response.UserResponse;
 import com.example.ilmnajot.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,33 +18,40 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
 
 
     @Override
     public ApiResponse addUser(UserRequest request) {
-        Optional<User> userByEmail = userRepository.findUserByEmail(request.getEmail());
+        Optional<User> userByEmail = userRepository.findByEmail(request.getEmail());
         if (userByEmail.isPresent()) {
             throw new UserException("User is already exist", HttpStatus.CONFLICT);
         }
+        if (!checkPassword(request)){
+            throw new UserException("Password does not match, please try again", HttpStatus.CONFLICT);
+        }
         User user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
+        user.setFullName(request.getFullName());
+        user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
+        user.setPhoneNumber(request.getPhoneNumber());
         user.setPassword(request.getPassword());
-        user.setAge(request.getAge());
+        user.setRoleName(RoleName.ADMIN);
+        user.setEnabled(true);
         User savedUser = userRepository.save(user);
         UserResponse userResponse = modelMapper.map(savedUser, UserResponse.class);
         return new ApiResponse("User Added", true, userResponse);
     }
+    private boolean checkPassword(UserRequest request){
+        String pass = request.getPassword();
+        String rePassword = request.getRePassword();
+        return pass.equals(rePassword);
+       }
 
     @Override
     public ApiResponse getUserById(Long userId) {
@@ -62,9 +71,9 @@ public class UserServiceImpl implements UserService {
                 .map(user -> modelMapper.map(user, UserResponse.class))
                 .toList();
 
-        Map<String , Object> responseMap = new HashMap<>();
+        Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("User response", responseList);
-        responseMap.put("current page",1);
+        responseMap.put("current page", 1);
         responseMap.put("totalItems", responseList.size());
         return new ApiResponse("Users Found", true, responseMap);
     }
@@ -73,11 +82,12 @@ public class UserServiceImpl implements UserService {
     public ApiResponse updateUser(Long userId, UserRequest request) {
         User user = getUser(userId);
         user.setId(userId);
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
+        user.setFullName(request.getFullName());
+        user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
+        user.setPhoneNumber(request.getPhoneNumber());
         user.setPassword(request.getPassword());
-        user.setAge(request.getAge());
+//        user.setRoleName(request.getRoleName());
         User savedUser = userRepository.save(user);
         UserResponse userResponse = modelMapper.map(savedUser, UserResponse.class);
         return new ApiResponse("User Updated", true, userResponse);
@@ -86,16 +96,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse deleteUser(Long userId) {
         User user = getUser(userId);
-        if (user != null){
-        userRepository.deleteById(userId);
-        return new ApiResponse("user deleted", true, "User deleted successfully");
+        if (user != null) {
+            userRepository.deleteById(userId);
+            return new ApiResponse("user deleted", true, "User deleted successfully");
         }
         throw new UserException("User not found", HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public ApiResponse getUserByName(String username) {
-        Optional<User> userByName = userRepository.findUserByName(username);
+    public ApiResponse getUserByName(String fullName) {
+        Optional<User> userByName = userRepository.findByFullName(fullName);
         if (userByName.isPresent()) {
             User user = userByName.get();
             UserResponse userResponse = modelMapper.map(user, UserResponse.class);
@@ -106,7 +116,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApiResponse getUserByEmail(String email) {
-        Optional<User> userByEmail = userRepository.findUserByEmail(email);
+        Optional<User> userByEmail = userRepository.findByEmail(email);
         if (userByEmail.isPresent()) {
             User user = userByEmail.get();
             UserResponse userResponse = modelMapper.map(user, UserResponse.class);

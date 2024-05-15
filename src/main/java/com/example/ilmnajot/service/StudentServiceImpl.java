@@ -6,8 +6,8 @@ import com.example.ilmnajot.model.common.ApiResponse;
 import com.example.ilmnajot.model.request.StudentRequest;
 import com.example.ilmnajot.model.response.StudentResponse;
 import com.example.ilmnajot.repository.StudentRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -17,22 +17,19 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
 
     private final StudentRepository studentRepository;
     private final ModelMapper modelMapper;
 
-    public StudentServiceImpl(StudentRepository studentRepository, ModelMapper modelMapper, EnableSpringDataWebSupport.QuerydslActivator querydslActivator) {
-        this.studentRepository = studentRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     public ApiResponse addStudent(StudentRequest request) {
         Optional<Student> userByEmail = studentRepository.findUserByEmail(request.getEmail());
-        if (userByEmail.isPresent()){
-            throw new UserException("Student with email " + request.getEmail() + " already exists", HttpStatus.CONFLICT );
+        if (userByEmail.isPresent()) {
+            throw new UserException("Student with email " + request.getEmail() + " already exists", HttpStatus.CONFLICT);
         }
         Student student = new Student();
         student.setName(request.getName());
@@ -58,7 +55,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ApiResponse getStudents() {
         List<Student> students = studentRepository.findAll();
-        if (students.isEmpty()){
+        if (students.isEmpty()) {
             throw new UserException("Students not found", HttpStatus.NOT_FOUND);
         }
         List<StudentResponse> studentResponses =

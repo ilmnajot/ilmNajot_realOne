@@ -17,55 +17,61 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
     @PostMapping("/addUser")
-    public HttpEntity<ApiResponse> addUser(@RequestBody UserRequest request){
+    public HttpEntity<ApiResponse> addUser(@RequestBody UserRequest request) {
         ApiResponse apiResponse = userService.addUser(request);
-        return apiResponse!=null
+        return apiResponse != null
                 ? ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse)
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
     @GetMapping("/getUser/{userId}")
-    public HttpEntity<ApiResponse> getUser(@PathVariable Long userId){
+    public HttpEntity<ApiResponse> getUser(@PathVariable Long userId) {
         ApiResponse apiResponse = userService.getUserById(userId);
-        return apiResponse!=null
+        return apiResponse != null
                 ? ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse)
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
     @GetMapping("/getUsers")
-    public HttpEntity<ApiResponse> getUsers(){
+    public HttpEntity<ApiResponse> getUsers() {
         ApiResponse apiResponse = userService.getUsers();
-        return apiResponse!=null
+        return apiResponse != null
                 ? ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse)
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
     @PutMapping("/updateUser/{userId}")
     public HttpEntity<ApiResponse> updateUser(
             @PathVariable Long userId,
-            @RequestBody UserRequest request){
+            @RequestBody UserRequest request) {
         ApiResponse apiResponse = userService.updateUser(userId, request);
-        return apiResponse!=null
+        return apiResponse != null
                 ? ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse)
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
     @DeleteMapping("/deleteUser/{userId}")
-    public HttpEntity<ApiResponse> deleteUser(@PathVariable Long userId){
+    public HttpEntity<ApiResponse> deleteUser(@PathVariable Long userId) {
         ApiResponse apiResponse = userService.deleteUser(userId);
-        return apiResponse!=null
+        return apiResponse != null
                 ? ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse)
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @GetMapping("/getUserByName")
-    public HttpEntity<ApiResponse> getUserByName(@RequestParam(name = "name") String name){
+    public HttpEntity<ApiResponse> getUserByName(@RequestParam(name = "name") String name) {
         ApiResponse apiResponse = userService.getUserByName(name);
-        return apiResponse!=null
+        return apiResponse != null
                 ? ResponseEntity.status(HttpStatus.FOUND).body(apiResponse)
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
     @GetMapping("/getUserByEmail")
-    public HttpEntity<ApiResponse> getUserByEmail(@RequestParam(name = "email") String email){
+    public HttpEntity<ApiResponse> getUserByEmail(@RequestParam(name = "email") String email) {
         ApiResponse apiResponse = userService.getUserByEmail(email);
-        return apiResponse!=null
+        return apiResponse != null
                 ? ResponseEntity.status(HttpStatus.FOUND).body(apiResponse)
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }

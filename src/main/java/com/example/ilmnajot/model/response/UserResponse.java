@@ -1,5 +1,6 @@
 package com.example.ilmnajot.model.response;
 
+import com.example.ilmnajot.enums.RoleName;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,13 +13,17 @@ public class UserResponse {
 
     private Long id;
 
-    private String firstName;
+    private String fullName;
 
-    private String lastName;
+    private String username;
 
     private String email;
 
-//    private String password;
+    private String phoneNumber;
 
-    private String age;
+    private RoleName roleName;
+//
+//    private String password;
+//
+//    private String rePassword;
 }

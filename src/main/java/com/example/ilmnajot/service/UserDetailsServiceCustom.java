@@ -1,12 +1,10 @@
 package com.example.ilmnajot.service;
 
+import com.example.ilmnajot.exception.UserException;
 import com.example.ilmnajot.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class UserDetailsServiceCustom implements UserDetailsService {
@@ -19,8 +17,8 @@ public class UserDetailsServiceCustom implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return (UserDetails) userRepository.findUserByName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+    public UserDetails loadUserByUsername(String username)  {
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new UserException("user not found"));
     }
 }

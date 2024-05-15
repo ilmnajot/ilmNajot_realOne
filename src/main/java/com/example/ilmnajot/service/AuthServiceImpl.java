@@ -21,28 +21,44 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final UserServiceImpl userService;
 
-    public AuthServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
+    public AuthServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, JwtProvider jwtProvider, UserServiceImpl userService) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
+        this.userService = userService;
     }
 
 
     @Override
     public ApiResponse register(UserRequest form) {
-        Optional<User> userByEmail = userRepository.findUserByEmail(form.getEmail());
-        if (userByEmail.isPresent()){
+        Optional<User> userByEmail = userRepository.findByEmail(form.getEmail());
+        if (userByEmail.isPresent()) {
             throw new UserException("user with email " + form.getEmail() + " already exists", HttpStatus.CONFLICT);
         }
-        User user = new User();
-        user.setFirstName(form.getFirstName());
-        user.setLastName(form.getLastName());
-        user.setEmail(form.getEmail());
-        user.setPassword(form.getPassword());
-        user.setPassword(form.getPassword());
-       throw new UserException("user with email: " + form.getEmail() +  "has been registered already", HttpStatus.CONFLICT);
+        ApiResponse apiResponse = userService.addUser(form);
+        return new ApiResponse("registered", true, apiResponse);
+
     }
+//        if (!checkPassword(form)){
+//            throw new UserException("Password does not match, please try again", HttpStatus.CONFLICT);
+//        }
+//        User user = new User();
+//        user.setFullName(form.getFullName());
+//        user.setUsername(form.getUsername());
+//        user.setEmail(form.getEmail());
+//        user.setPhoneNumber(form.getPhoneNumber());
+//        user.setPassword(form.getPassword());
+//        user.setEnabled(true);
+//       throw new UserException("user with email: " + form.getEmail() +  "has been registered already", HttpStatus.CONFLICT);
+//    }
+//    private boolean checkPassword(UserRequest request){
+//        String pass = request.getPassword();
+//        String rePassword = request.getRePassword();
+//        return pass.equals(rePassword);
+//    }
+
 
     @Override
     public ApiResponse login(LoginForm form) {

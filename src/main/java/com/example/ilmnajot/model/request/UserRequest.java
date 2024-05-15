@@ -1,19 +1,24 @@
 package com.example.ilmnajot.model.request;
 
+import com.example.ilmnajot.enums.RoleName;
 import lombok.Data;
 
 @Data
 public class UserRequest {
 
-    private String firstName;
+    private String fullName;
 
-    private String lastName;
+    private String username;
 
     private String email;
 
+    private String phoneNumber;
+
     private String password;
 
-    private String age;
+    private String rePassword;
+
+//    private RoleName roleName;
 
 }
 
