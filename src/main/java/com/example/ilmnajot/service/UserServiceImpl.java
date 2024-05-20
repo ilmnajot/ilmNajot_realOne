@@ -10,6 +10,7 @@ import com.example.ilmnajot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -22,13 +23,16 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
     private final ModelMapper modelMapper;
 
 
 
     @Override
     public ApiResponse addUser(UserRequest request) {
-        Optional<User> userByEmail = userRepository.findByEmail(request.getEmail());
+        Optional<User> userByEmail = userRepository.findByUsername(request.getUsername());
         if (userByEmail.isPresent()) {
             throw new UserException("User is already exist", HttpStatus.CONFLICT);
         }
@@ -38,9 +42,8 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setFullName(request.getFullName());
         user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
         user.setPhoneNumber(request.getPhoneNumber());
-        user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoleName(RoleName.ADMIN);
         user.setEnabled(true);
         User savedUser = userRepository.save(user);
@@ -84,7 +87,6 @@ public class UserServiceImpl implements UserService {
         user.setId(userId);
         user.setFullName(request.getFullName());
         user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
         user.setPhoneNumber(request.getPhoneNumber());
         user.setPassword(request.getPassword());
 //        user.setRoleName(request.getRoleName());
@@ -116,7 +118,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApiResponse getUserByEmail(String email) {
-        Optional<User> userByEmail = userRepository.findByEmail(email);
+        Optional<User> userByEmail = userRepository.findByUsername(email);
         if (userByEmail.isPresent()) {
             User user = userByEmail.get();
             UserResponse userResponse = modelMapper.map(user, UserResponse.class);

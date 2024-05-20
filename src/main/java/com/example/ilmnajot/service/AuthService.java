@@ -1,5 +1,6 @@
 package com.example.ilmnajot.service;
 
+import com.example.ilmnajot.entity.User;
 import com.example.ilmnajot.model.common.ApiResponse;
 import com.example.ilmnajot.model.request.LoginForm;
 import com.example.ilmnajot.model.request.UserRequest;
