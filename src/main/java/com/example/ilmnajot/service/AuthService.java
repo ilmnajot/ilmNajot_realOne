@@ -1,14 +1,15 @@
 package com.example.ilmnajot.service;
 
-import com.example.ilmnajot.entity.User;
-import com.example.ilmnajot.model.common.ApiResponse;
 import com.example.ilmnajot.model.request.LoginForm;
 import com.example.ilmnajot.model.request.UserRequest;
+import com.example.ilmnajot.model.response.LoginResponse;
 
 
 public interface AuthService {
 
-    ApiResponse register(UserRequest form);
+    LoginResponse register(UserRequest form);
 
-    ApiResponse login(LoginForm form);
+//    LoginResponse addUser(UserRequest request);
+
+    LoginResponse authenticate(LoginForm form);
 }

@@ -2,10 +2,11 @@ package com.example.ilmnajot.service;
 
 import com.example.ilmnajot.model.common.ApiResponse;
 import com.example.ilmnajot.model.request.UserRequest;
+import com.example.ilmnajot.model.response.LoginResponse;
 
 public interface UserService {
 
-    ApiResponse addUser(UserRequest request);
+//    LoginResponse addUser(UserRequest request);
 
     ApiResponse getUserById(Long userId);
 
@@ -18,4 +19,6 @@ public interface UserService {
     ApiResponse getUserByName(String username);
 
     ApiResponse getUserByEmail(String email);
+
+//    LoginResponse addUser(UserRequest request);
 }

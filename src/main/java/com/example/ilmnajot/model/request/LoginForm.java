@@ -1,8 +1,12 @@
 package com.example.ilmnajot.model.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginForm {
 
     private String username;

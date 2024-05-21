@@ -4,6 +4,7 @@ import com.example.ilmnajot.entity.User;
 import com.example.ilmnajot.model.common.ApiResponse;
 import com.example.ilmnajot.model.request.LoginForm;
 import com.example.ilmnajot.model.request.UserRequest;
+import com.example.ilmnajot.model.response.LoginResponse;
 import com.example.ilmnajot.service.AuthService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -21,18 +22,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public HttpEntity<ApiResponse> register(@RequestBody UserRequest form) {
-        ApiResponse apiResponse = authService.register(form);
-        return apiResponse != null
-                ? ResponseEntity.ok(apiResponse)
+    public HttpEntity<?> register(@RequestBody UserRequest form) {
+        LoginResponse register = authService.register(form);
+        return register != null
+                ? ResponseEntity.ok(register)
                 : ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @PostMapping("/login")
-    public HttpEntity<ApiResponse> login(@RequestBody LoginForm form) {
-        ApiResponse apiResponse = authService.login(form);
-        return apiResponse != null
-                ? ResponseEntity.ok(apiResponse)
+    public HttpEntity<?> login(@RequestBody LoginForm form) {
+        LoginResponse authenticate = authService.authenticate(form);
+        return authenticate != null
+                ? ResponseEntity.ok(authenticate)
                 : ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 

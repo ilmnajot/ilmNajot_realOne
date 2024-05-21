@@ -17,7 +17,7 @@ import java.util.function.Function;
 @Component
 public class JwtProvider {
 
-    private static final String securityKey = "SECRETKEY";
+    private static final String securityKey = "c2tqZGdmc2Rqa2xnaGRka2ZqZ2hpb2FzbGpnYXNsaWtoZ25qc2RmLGJnbnNrZGpyLGJucmRremxna2pzcmRsaWtnZG5scmtmZ25ma2Q=";
     private static final long ACCESSTOKENEXPIREDTIME = 5 * 5 * 5 * 60 * 1000L;
     private static final long REFRESHTOKENEXPIREDTIME = 5 * 5 * 5 * 60 * 5 * 1000L;
 
@@ -29,14 +29,23 @@ public class JwtProvider {
                 .builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESSTOKENEXPIREDTIME))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+    public String generateToken(UserDetails userDetails) {
+        return Jwts
+                .builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESSTOKENEXPIREDTIME))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                .compact();
+    }
 
     private SecretKey getSigningKey() {
-        byte[] bytes = Decoders.BASE64.decode(securityKey);
+        byte[] bytes = Decoders.BASE64URL.decode(securityKey);
         return Keys.hmacShaKeyFor(bytes);
 
     }

@@ -5,10 +5,14 @@ import com.example.ilmnajot.enums.RoleName;
 import com.example.ilmnajot.exception.UserException;
 import com.example.ilmnajot.model.common.ApiResponse;
 import com.example.ilmnajot.model.request.UserRequest;
+import com.example.ilmnajot.model.response.LoginResponse;
 import com.example.ilmnajot.model.response.UserResponse;
 import com.example.ilmnajot.repository.UserRepository;
+import com.example.ilmnajot.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,39 +26,45 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     private final ModelMapper modelMapper;
 
+    private final JwtProvider jwtProvider;
 
+//
+//    @Override
+//    public LoginResponse addUser(UserRequest request) {
+//        Optional<User> userByEmail = userRepository.findByUsername(request.getUsername());
+//        if (userByEmail.isPresent()) {
+//            throw new UserException("User is already exist", HttpStatus.CONFLICT);
+//        }
+//        if (!checkPassword(request)) {
+//            throw new UserException("Password does not match, please try again", HttpStatus.CONFLICT);
+//        }
+//        User user = new User();
+//        user.setFullName(request.getFullName());
+//        user.setUsername(request.getUsername());
+//        user.setPhoneNumber(request.getPhoneNumber());
+//        user.setPassword(passwordEncoder.encode(request.getPassword()));
+//        user.setRoleName(RoleName.ADMIN);
+//        user.setEnabled(true);
+//        userRepository.save(user);
+//        String token = jwtProvider.generateToken(user);
+//        LoginResponse loginResponse = new LoginResponse();
+//        loginResponse.setToken(token);
+////        UserResponse userResponse = modelMapper.map(savedUser, UserResponse.class);
+//        return loginResponse;
+//    }
 
-    @Override
-    public ApiResponse addUser(UserRequest request) {
-        Optional<User> userByEmail = userRepository.findByUsername(request.getUsername());
-        if (userByEmail.isPresent()) {
-            throw new UserException("User is already exist", HttpStatus.CONFLICT);
-        }
-        if (!checkPassword(request)){
-            throw new UserException("Password does not match, please try again", HttpStatus.CONFLICT);
-        }
-        User user = new User();
-        user.setFullName(request.getFullName());
-        user.setUsername(request.getUsername());
-        user.setPhoneNumber(request.getPhoneNumber());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRoleName(RoleName.ADMIN);
-        user.setEnabled(true);
-        User savedUser = userRepository.save(user);
-        UserResponse userResponse = modelMapper.map(savedUser, UserResponse.class);
-        return new ApiResponse("User Added", true, userResponse);
-    }
-    private boolean checkPassword(UserRequest request){
+    private boolean checkPassword(UserRequest request) {
         String pass = request.getPassword();
         String rePassword = request.getRePassword();
         return pass.equals(rePassword);
-       }
+    }
 
     @Override
     public ApiResponse getUserById(Long userId) {

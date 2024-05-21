@@ -23,7 +23,7 @@ public class User extends BaseEntity implements UserDetails {
 
     private String fullName;
 
-    @Column(unique = true, nullable = false)
+//    @Column(unique = true, nullable = false)
     private String username;
 
     private String phoneNumber;
